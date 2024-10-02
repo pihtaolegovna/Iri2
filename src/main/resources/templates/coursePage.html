@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Courses</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+
+<div class="container mt-5">
+    <h1>Courses</h1>
+
+    <form action="/course" method="get" class="mb-4">
+        <div class="form-row align-items-end">
+            <div class="col">
+                <label for="filterName">Filter by Name:</label>
+                <input type="text" class="form-control" id="filterName" name="filterName" placeholder="Course Name" th:value="${filterName}">
+            </div>
+            <div class="col">
+                <label for="filterDescription">Filter by Description:</label>
+                <input type="text" class="form-control" id="filterDescription" name="filterDescription" placeholder="Description" th:value="${filterDescription}">
+            </div>
+            <div class="col">
+                <label for="sortField">Sort by:</label>
+                <select class="form-control" id="sortField" name="sortField">
+                    <option value="name" th:selected="${sortField == 'name'}">Name</option>
+                    <option value="description" th:selected="${sortField == 'description'}">Description</option>
+                </select>
+            </div>
+            <div class="col">
+                <label for="sortDirection">Direction:</label>
+                <select class="form-control" id="sortDirection" name="sortDirection">
+                    <option value="asc" th:selected="${sortDirection == 'asc'}">Ascending</option>
+                    <option value="desc" th:selected="${sortDirection == 'desc'}">Descending</option>
+                </select>
+            </div>
+            <div class="col-auto">
+                <button type="submit" class="btn btn-primary">Filter</button>
+            </div>
+        </div>
+    </form>
+
+    <form th:action="@{/course/logicdelete}" method="post" class="mb-4">
+        <table class="table">
+            <thead>
+            <tr>
+                <th>Select</th>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="course : ${courses}">
+                <td>
+                    <input type="checkbox" name="ids" th:value="${course.id}"/>
+                </td>
+                <td th:text="${course.name}">Course Name</td>
+                <td th:text="${course.description}">Course Description</td>
+                <td>
+                    <a th:href="@{/course/edit/{id}(id=${course.id})}" class="btn btn-warning">Edit</a>
+                    <button type="submit" class="btn btn-danger" formaction="/course/physdelete" style="margin-left: 5px;">Physically Delete</button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <button type="submit" class="btn btn-danger">Logically Delete Selected</button>
+    </form>
+
+    <a href="/course/create" class="btn btn-success">Create New Course</a>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student List</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+
+<div class="container mt-5">
+    <h2 class="text-center">Список студентов</h2>
+
+    <form action="/student" method="get" class="mb-4">
+        <div class="form-row align-items-end">
+            <div class="col">
+                <label for="filterName">Фильтр по имени:</label>
+                <input type="text" class="form-control" id="filterName" name="filterName" placeholder="Имя">
+            </div>
+            <div class="col">
+                <label for="filterEmail">Фильтр по email:</label>
+                <input type="text" class="form-control" id="filterEmail" name="filterEmail" placeholder="Email">
+            </div>
+            <div class="col-auto">
+                <div class="form-check">
+                    <input type="checkbox" class="form-check-input" id="isDeleted" name="isDeleted" value="true">
+                    <label class="form-check-label" for="isDeleted">Показать удаленных</label>
+                </div>
+            </div>
+            <div class="col">
+                <label for="sortField">Сортировать по:</label>
+                <select class="form-control" id="sortField" name="sortField">
+                    <option value="name">Имя</option>
+                    <option value="email">Email</option>
+                </select>
+            </div>
+            <div class="col">
+                <label for="sortDirection">Направление:</label>
+                <select class="form-control" id="sortDirection" name="sortDirection">
+                    <option value="asc">По возрастанию</option>
+                    <option value="desc">По убыванию</option>
+                </select>
+            </div>
+            <div class="col-auto">
+                <button type="submit" class="btn btn-primary">Фильтр</button>
+            </div>
+        </div>
+    </form>
+
+    <form action="/student/create" method="get" class="mb-4">
+        <button type="submit" class="btn btn-success">Добавить студента</button>
+    </form>
+
+    <ul class="list-group mb-4">
+        <th:block th:each="student : ${students}">
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                <div>
+                    <strong th:text="${student.getId()}"></strong>
+                    <span th:text="${student.getName()}"></span> -
+                    <span th:text="${student.getEmail()}"></span>
+                </div>
+                <a th:href="@{/student/edit/{id}(id=${student.getId()})}" class="btn btn-warning btn-sm">Изменить</a>
+            </li>
+        </th:block>
+    </ul>
+
+    <form action="/student/logicdelete" method="post" class="mb-4">
+        <h5>Логическое удаление:</h5>
+        <ul class="list-group mb-3">
+            <th:block th:each="student : ${students}">
+                <li class="list-group-item">
+                    <input type="checkbox" name="ids" th:value="${student.getId()}">
+                    <span th:text="${student.getName()}"></span>
+                </li>
+            </th:block>
+        </ul>
+        <button type="submit" class="btn btn-danger">Логически удалить выбранных</button>
+    </form>
+
+    <form action="/student/physdelete" method="post">
+        <h5>Физическое удаление:</h5>
+        <ul class="list-group mb-3">
+            <th:block th:each="student : ${students}">
+                <li class="list-group-item">
+                    <input type="checkbox" name="ids" th:value="${student.getId()}">
+                    <span th:text="${student.getName()}"></span>
+                </li>
+            </th:block>
+        </ul>
+        <button type="submit" class="btn btn-danger">Физически удалить выбранных</button>
+    </form>
+
+    <div class="d-flex justify-content-between mt-4">
+        <th:block th:if="${currentPage > 0}">
+            <a class="btn btn-secondary" th:href="@{|/student?page=${currentPage - 1}|}">Назад</a>
+        </th:block>
+        <th:block th:if="${currentPage < totalPages - 1}">
+            <a class="btn btn-secondary" th:href="@{|/student?page=${currentPage + 1}|}">Вперед</a>
+        </th:block>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

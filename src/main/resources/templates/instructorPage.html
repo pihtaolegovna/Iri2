@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Instructors</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+
+<div class="container mt-5">
+    <h1>Instructors</h1>
+
+    <form action="/instructor" method="get" class="mb-4">
+        <div class="form-row align-items-end">
+            <div class="col">
+                <label for="filterName">Filter by Name:</label>
+                <input type="text" class="form-control" id="filterName" name="filterName" placeholder="Instructor Name" th:value="${filterName}">
+            </div>
+            <div class="col">
+                <label for="filterEmail">Filter by Email:</label>
+                <input type="email" class="form-control" id="filterEmail" name="filterEmail" placeholder="Instructor Email" th:value="${filterEmail}">
+            </div>
+            <div class="col">
+                <label for="isDeleted">Show Deleted:</label>
+                <select class="form-control" id="isDeleted" name="isDeleted">
+                    <option value="" th:selected="${isDeleted == null}">All</option>
+                    <option value="true" th:selected="${isDeleted}">Deleted</option>
+                    <option value="false" th:selected="${isDeleted == false}">Active</option>
+                </select>
+            </div>
+            <div class="col">
+                <label for="sortField">Sort by:</label>
+                <select class="form-control" id="sortField" name="sortField">
+                    <option value="name" th:selected="${sortField == 'name'}">Name</option>
+                    <option value="email" th:selected="${sortField == 'email'}">Email</option>
+                </select>
+            </div>
+            <div class="col">
+                <label for="sortDirection">Direction:</label>
+                <select class="form-control" id="sortDirection" name="sortDirection">
+                    <option value="asc" th:selected="${sortDirection == 'asc'}">Ascending</option>
+                    <option value="desc" th:selected="${sortDirection == 'desc'}">Descending</option>
+                </select>
+            </div>
+            <div class="col-auto">
+                <button type="submit" class="btn btn-primary">Filter</button>
+            </div>
+        </div>
+    </form>
+
+    <form th:action="@{/instructor/logicdelete}" method="post" class="mb-4">
+        <table class="table">
+            <thead>
+            <tr>
+                <th>Select</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="instructor : ${instructors}">
+                <td>
+                    <input type="checkbox" name="ids" th:value="${instructor.id}"/>
+                </td>
+                <td th:text="${instructor.name}">Instructor Name</td>
+                <td th:text="${instructor.email}">Instructor Email</td>
+                <td>
+                    <a th:href="@{/instructor/edit/{id}(id=${instructor.id})}" class="btn btn-warning">Edit</a>
+                    <button type="submit" class="btn btn-danger" formaction="/instructor/physdelete" style="margin-left: 5px;">Physically Delete</button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <button type="submit" class="btn btn-danger">Logically Delete Selected</button>
+    </form>
+
+    <a href="/instructor/create" class="btn btn-success">Create New Instructor</a>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
